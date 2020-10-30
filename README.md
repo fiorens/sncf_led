@@ -20,7 +20,8 @@ Utilisation de :
 Utilisation de :
 * lignes de commandes systèmes BASH
 * l'application **jq**
-*Il est necessaire d'avoir un token API sur les API de la SNCF.*
+
+**Il est necessaire d'avoir un token API sur les API de la SNCF.**
 
 Bonne utilisation
 
