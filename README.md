@@ -12,15 +12,15 @@ SNCF_LED est développé en language BASH via une méthode AGILE. La mise en pro
 ## Matériel
 
 Utilisation de :
-	* d'un raspberry PI 2B.
-	* une plaquette breadboard avec 3 LED et 3 résistances
+* d'un raspberry PI 2B.
+* une plaquette breadboard avec 3 LED et 3 résistances
 
 ## Logiciel
 
 Utilisation de :
-	* lignes de commandes systèmes BASH
-	* l'application **jq**
-**Il est necessaire d'avoir un token API sur les API de la SNCF.
+* lignes de commandes systèmes BASH
+* l'application **jq**
+*Il est necessaire d'avoir un token API sur les API de la SNCF.*
 
 Bonne utilisation
 
