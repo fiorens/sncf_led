@@ -1,0 +1,128 @@
+
+TestAppli() {
+
+	if ! [ -x "$(command -v curl)" ]; then
+		echo 'Error: curl is not installed.' >&2
+		exit 1
+	fi
+
+	if ! [ -x "$(command -v jq)" ]; then
+		echo 'Error : jq is not installed.' >&2
+		exit 1
+	fi	
+}
+
+Date_ajd() {
+
+	#Date="20201023"
+	Date=$(date '+%Y%m%d')
+}
+
+Token() {
+	Token_api=$(cat token.file)
+}
+
+Variable() {
+
+Token
+
+### Déclaration des variables
+Partie1="https://"
+Partie2="@api.sncf.com/v1/coverage/sncf/journeys?from=stop_area%3AOCE%3ASA%3A87723718&to=stop_area%3AOCE%3ASA%3A87723197&datetime="
+Partie3="T073000&datetime_represents=departure&min_nb_journeys=3&"
+Chaine=$Partie1$Token_api$Partie2$Partie3
+echo $Chaine
+exit
+}
+
+Recup(){
+	
+	Date_ajd
+	Variable
+
+	Train1=$(curl -s $Chaine | jq '.journeys[0].status')
+	Train2=$(curl -s $Chaine | jq '.journeys[1].status')
+	Train3=$(curl -s $Chaine | jq '.journeys[2].status')
+	echo "$Train1 $Train2 $Train3"
+
+}
+
+Test_Recup(){
+
+	if [ $Train1 = "\"SIGNIFICANT_DELAYS\"" ] ; then
+        Retard=1
+	fi
+
+	if [ $Train2 = "\"SIGNIFICANT_DELAYS\"" ] ; then
+        Retard=1
+	fi
+
+	if [ $Train3 = "\"SIGNIFICANT_DELAYS\"" ] ; then
+        Retard=1
+	fi
+
+        if [ $Train1 = "\"DETOUR\"" ] || [ $Train1 = "\"NO_SERVICE\"" ] ; then
+        Annul=1
+        fi
+
+        if [ $Train2 = "\"DETOUR\"" ] || [ $Train1 = "\"NO_SERVICE\"" ] ; then
+        Annul=1
+        fi
+
+        if [ $Train3 = "\"DETOUR\"" ] || [ $Train1 = "\"NO_SERVICE\"" ] ; then
+        Annul=1
+        fi
+
+
+	if [ $Retard = 0 ] && [ $Annul = 0 ] ; then
+	gpio write 3 1
+	fi
+
+	if [ $Retard = 1 ] ; then
+        gpio write 2 1
+	fi
+
+        if [ $Annul = 1 ] ; then
+        gpio write 0 1
+        fi
+
+}
+
+Arret_LED(){
+
+	gpio write 0 0
+	gpio write 2 0
+	gpio write 3 0
+}
+
+Init_LED() {
+	
+	gpio mode 0 out
+	gpio mode 2 out
+	gpio mode 3 out
+}
+
+
+TestAppli
+Date_ajd
+Variable
+Init_LED
+
+
+while [ : ]
+do
+
+	Arret_LED
+	Retard=0
+	Annul=0
+	date
+	
+	Heures=$(date '+%H%M')
+
+        if [ $Heures -ge 0700 ] && [ $Heures -le 1000 ] ; then
+		Recup
+		Test_Recup
+	fi
+
+	sleep 5m
+done
