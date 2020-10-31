@@ -31,8 +31,6 @@ Partie1="https://"
 Partie2="@api.sncf.com/v1/coverage/sncf/journeys?from=stop_area%3AOCE%3ASA%3A87723718&to=stop_area%3AOCE%3ASA%3A87723197&datetime="
 Partie3="T073000&datetime_represents=departure&min_nb_journeys=3&"
 Chaine=$Partie1$Token_api$Partie2$Partie3
-echo $Chaine
-exit
 }
 
 Recup(){
