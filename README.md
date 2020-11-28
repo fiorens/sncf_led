@@ -1,5 +1,7 @@
 # SNCF LED
 
+Arrêt du projet au profit de https://github.com/fiorens/QuickDashboardSNCF
+
 ## Projet
 
 Le projet SNCF_LED a pour finalité d'allumer des LED connectées à un Raspberry afin d'informer l'utilisateur sur l'état de présence des deux précédents trains ainsi que son train actuel.
